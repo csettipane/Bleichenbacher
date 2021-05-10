@@ -16,15 +16,22 @@ import conversions
 import oracle
 
 def attack(ciphertext, n, e):
+    #Implement Step 1 skip check
+
     #Step 1: Blinding, find the first PCKS conforming message
     blind = randint(0,2^16)
     while(not padding_oracle(RSA_encrypt(blind))):
         blind = randint(0,2^16)
-    c = RSA_encrypt(blind)
+    c = RSA_encrypt(blind, n, e)
     B = pow(2, 8*(len(ciphertext-2)))
     M = [2*B, 3*B]
     i = 1
-    
+    s1 = n//(3*B)
     #Step 2: Search for more PCKS conforming messages
     while(True):
         #^Hate that
+
+    #Step 3: Narrow solution set
+
+    #Step 4: Compute the solution
+        
