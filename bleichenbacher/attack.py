@@ -45,7 +45,7 @@ def attack(ciphertext, n, e):
             s_i = 0
             a = M.lower
             b = M.upper
-            r = 2*b*s_i - 2*B
+            r = 2*b*s_i_1 - 2*B
             r_i = r // n + (r % n)
             
             while(s_i == 0):
@@ -54,6 +54,7 @@ def attack(ciphertext, n, e):
                 s_i = find_c_i(c, e, n, lower,  upper)
                 r_i += 1
     #Step 3: Narrow solution set
+    s_i_1 = s_i
     i += 1
     #Step 4: Compute the solution
     
