@@ -32,18 +32,23 @@ def attack(ciphertext, n, e):
     s1 = n//(3*B)
     #Step 2: Search for more PCKS conforming messages
     while(M.lower != M.upper):
-        #Step 2(a): Find s
-            
+        #Step 2(a): Find smallest possible s_i s.t. ciphertext c_i PKSC conforming
+        if(i = 1):
+            #s_i = find_c_i(c, e, n, **lower**, n-1)
+            #Not sure what lower bound should be
+                           
+         #Step 2(b): 
+         #Step 2(c):
     #Step 3: Narrow solution set
-
+    i += 1
     #Step 4: Compute the solution
     
 #Function computes c_i, returns smallest s_i where c_i is PKCS conforming
 def find_c_i(c, e, n, lower_bound, upper_bound):
     s_i = lower_bound
-     c_i = (c * pow(s_i, e)) % n
+    c_i = (c * pow(s_i, e)) % n
     #Iterates s_i and checks to see if c_i is PKCS conforming
-    while(not padding_oracle(c_i) and s_i <= upper_bound):
+    while(not padding_oracle(conversions.int_to_bytes(c_i)) and s_i <= upper_bound):
         s_i += 1
         c_i = (c * pow(s_i, e)) % n
     if (s_i > upper_bound):
