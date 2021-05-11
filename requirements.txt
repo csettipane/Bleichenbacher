@@ -1,3 +1,4 @@
 #Requires the following modules without version specifiers
 numpy
 pycryptodome
+portion
