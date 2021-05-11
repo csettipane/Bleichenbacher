@@ -51,7 +51,7 @@ def attack(ciphertext, n, e):
             while(s_i == 0):
                 lower_bound = (2 * B + r_i * n) // b + (2 * B + r_i * n % b)
                 upper_bound = ((3 * B + r_i * n) // a + (3 * B + r_i * n % a)) - 1
-                s_i = find_c_i(c, e, n, lower,  upper)
+                s_i = find_c_i(c, e, n, lower_bound,  upper_bound)
                 r_i += 1
     #Step 3: Narrow solution set
     s1 = s_i
