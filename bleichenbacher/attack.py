@@ -29,16 +29,30 @@ def attack(ciphertext, n, e):
     b = (3*B) - 1
     M = P.closed(a, b)
     i = 1
-    s1 = n//(3*B)
+    #s1 = n//(3*B)
+    s1 = 1
     #Step 2: Search for more PCKS conforming messages
     while(M.lower != M.upper):
         #Step 2(a): Find smallest possible s_i s.t. ciphertext c_i PKSC conforming
         if(i = 1):
-            #s_i = find_c_i(c, e, n, **lower**, n-1)
-            #Not sure what lower bound should be
+            s_i = find_c_i(c, e, n, ((n // 3*B) + (n % 3*B)), n-1)
                            
-         #Step 2(b): 
-         #Step 2(c):
+         #Step 2(b): If M has multiple intervals and i > 1, find smallest s_i PKCS conforming
+        elif(len(M) > 1):
+            s_i = find_c_i(c, e, n, s1 + 1, n - 1) 
+         #Step 2(c): Searching with one interval left
+        else:
+            s_i = 0
+            a = M.lower
+            b = M.upper
+            r = 2*b*s_i - 2*B
+            r_i = r // n + (r % n)
+            
+            while(s_i == 0):
+                lower_bound = (2 * B + r_i * n) // b + (2 * B + r_i * n % b)
+                upper_bound = ((3 * B + r_i * n) // a + (3 * B + r_i * n % a)) - 1
+                s_i = find_c_i(c, e, n, lower,  upper)
+                r_i += 1
     #Step 3: Narrow solution set
     i += 1
     #Step 4: Compute the solution
