@@ -11,6 +11,8 @@ where n and e are the public key modulus and exponent respectively
 from random import randint
 from oracle import padding_oracle
 from Crypto.Util import number
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
 import helpers
 import conversions
 import oracle
@@ -21,11 +23,12 @@ def attack(c:int, n:int, e:int)->int():
     #Implement Step 1 skip check
     #Step 1: Blinding, find the first PKCS conforming message
     s = generate_s()
-    blind = c*pow(s,e,n)
+    blind = c*pow(s,e) % n
     while(not padding_oracle(RSA_encrypt(blind, n, e))):
         s = generate_s()
-        blind = c*pow(s,e,n)
+        blind = c*pow(s,e) % n
     c_0 = blind
+    #watch out for int to bytes
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
     a = 2*B
     b = (3*B) - 1
@@ -48,17 +51,15 @@ def attack(c:int, n:int, e:int)->int():
             interval = next(iter(M))
             a = interval.lower
             b = interval.upper
-            r = 2*b*s_i - 2*B
-            r_i = r // n + (r % n)
-            #CHECK
+            r_i = (2*b*s_i - 2*B) // n
             while(s_i == 0):
-                lower_bound = (2 * B + r_i * n) // b + (2 * B + r_i * n % b)
-                upper_bound = ((3 * B + r_i * n) // a + (3 * B + r_i * n % a)) - 1
+                lower_bound = (2 * B + r_i * n) // b 
+                upper_bound = (3 * B + r_i * n) // a 
                 s_i = find_c_i(c, e, n, lower_bound,  upper_bound)
                 r_i += 1
         #Step 3: Narrow solution set
         new_M = set()
-        for interval in set:
+        for interval in M:
             a = interval.lower
             b = interval.upper
             lower_r = (a*s_i-3*B+1)//n
@@ -72,9 +73,11 @@ def attack(c:int, n:int, e:int)->int():
         #Step 4: Compute the solution
         #CHECK careful here with iter?
         if len(M)==1 and (next(iter(M)).lower == next(iter(M)).upper): 
-            m = number.inverse(s*next(iter(M)).lower)
+            m = number.inverse(s*next(iter(M)).lower, n)
             return m
         i += 1
+    return 0
+
 #Function computes c_i, returns smallest s_i where c_i is PKCS conforming
 def find_c_i(c, e, n, lower_bound, upper_bound):
     s_i = lower_bound
