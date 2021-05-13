@@ -37,7 +37,7 @@ def attack(c:int, n:int, e:int,d:int)->int:
         if blind not in blinds:
             blinds.add(blind)
             flag = not padding_oracle(blind,d,n)
-    print("blind found")
+    print("blind found in", num_checks)
     c_0 = blind
     #watch out for int to bytes
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
@@ -51,7 +51,8 @@ def attack(c:int, n:int, e:int,d:int)->int:
         #Step 2(a): Find smallest possible s_i s.t. 
         #ciphertext c_i PKCS conforming
         if(i == 1):
-            s_i = find_c_i(c, e, n, ((n // 3*B) + (n % 3*B)), n-1)
+            print("start step2a")
+            s_i = find_c_i(c, e, n, n // (3*B), n-1)
             print("step2a")
         #Step 2(b): If M has multiple intervals and i > 1, 
         #find smallest s_i PKCS conforming
