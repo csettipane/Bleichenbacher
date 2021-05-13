@@ -39,15 +39,17 @@ def attack(c:int, n:int, e:int,d:int)->int:
             flag = not padding_oracle(blind,d,n)
     print("blind found in", num_checks)
     c_0 = blind
-    #watch out for int to bytes
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
     a = 2*B
     b = (3*B) - 1
     M = set()
-    M.add(P.closed(a, b))
+    #M.add(P.closed(a, b))
+    M.add((a,b))
+    print(len(M))
     i = 1
     #Step 2: Search for more PKCS conforming messages 
-    while(i==1 or len(M)>1):
+    #while(i==1 or len(M)>1):
+    while(True):
         #Step 2(a): Find smallest possible s_i s.t. 
         #ciphertext c_i PKCS conforming
         if(i == 1):
@@ -63,9 +65,10 @@ def attack(c:int, n:int, e:int,d:int)->int:
         else:
             print("step2c")
             s_i = 0
-            interval = next(iter(M))
-            a = interval.lower
-            b = interval.upper
+            m_copy = M.copy()
+            interval = m_copy.pop()
+            a = interval[0]
+            b = interval[1]
             r_i = (2*b*s_i - 2*B) // n
             while(s_i == 0):
                 lower_bound = (2 * B + r_i * n) // b 
@@ -76,22 +79,24 @@ def attack(c:int, n:int, e:int,d:int)->int:
         print("step3")
         new_M = set()
         for interval in M:
-            a = interval.lower
-            b = interval.upper
+            a = interval[0]
+            b = interval[1]
             lower_r = (a*s_i-3*B+1)//n
             upper_r = (b*s_i-2*B)//n+1
             for r in range(lower_r, upper_r):
                 maxer = ceil((2*B + r*n)/s_i)
                 minner = (3*B-1+r*n)//s_i
-                #CHECK
-                new_M.union(P.closed(max(a,maxer),min(b,minner)))
-        M = new_M
+                new_M.add((max(a,maxer),min(b,minner)))
+        M = new_M.copy()
+        print("step 3 over")
         #Step 4: Compute the solution
-        #CHECK careful here with iter?
-        if len(M)==1 and (next(iter(M)).lower == next(iter(M)).upper): 
-            m = number.inverse(s*next(iter(M)).lower, n)
+        print(M)
+        interval = new_M.pop()
+        if len(new_M)==0 and (interval[0] == interval[1]): 
+            m = number.inverse(s*val[0].lower, n)
             return m
         i += 1
+    print(M)
     return 0
 
 #Function computes c_i, returns smallest s_i where c_i is PKCS conforming
