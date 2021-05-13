@@ -15,11 +15,10 @@ def padding_oracle(ciphertext:bytes, d:int, n:int):
     #the first two bytes must be b'00' and b'02'
     if len(plaintext)<11:
         return False
-    plaintext = conversions.bytes_to_string(plaintext)
-    if plaintext[0]!="0" or plaintext[1]!="2":
+    if plaintext[0:1]!=b'0' or plaintext[1:2]!=b'2':
         return False
     for i in range(2,len(plaintext)):
-        if plaintext[i] == "0":
+        if plaintext[i:i+1] == b'0':
             #padding must have a length of 8 or more
             return i-2 >= 8
     #if no bytes are b'00' then not PKCS conforming

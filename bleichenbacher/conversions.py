@@ -76,10 +76,10 @@ def b64_to_hex(b64rep):
     return bytes_to_hex(b64_to_bytes(b64rep))
 
 def int_to_bytes(intrep):
-    return intrep.to_bytes((x.bit_length() + 7) // 8, 'big')
+    return intrep.to_bytes((intrep.bit_length() + 7) // 8, 'big')
 
 def bytes_to_int(bytesrep):
-    int.from_bytes(bytesrep, 'big')
+    return int.from_bytes(bytesrep, 'big')
 
 #convert between python bytes objects and ordinary strings
 
