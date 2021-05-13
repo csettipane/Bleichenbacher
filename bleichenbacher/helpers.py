@@ -18,4 +18,4 @@ def RSA_decrypt(ciphertext:bytes,d:int,n:int)->bytes:
     )
 
 def generate_s()->int:
-    return randint(0, 2^16)
+    return randint(0, 2^256)
