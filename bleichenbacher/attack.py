@@ -21,11 +21,12 @@ def attack(c:int, n:int, e:int)->int():
     #Implement Step 1 skip check
     #Step 1: Blinding, find the first PKCS conforming message
     s = generate_s()
-    blind = c*pow(s,e)
+    blind = c*pow(s,e,n)
     while(not padding_oracle(RSA_encrypt(blind, n, e))):
-        blind = conversions.int_to_bytes(randint(0,2^16))
-    c_0 = RSA_encrypt(blind, n, e)
-    B = pow(2, 8*(len(string(c))-2))
+        s = generate_s()
+        blind = c*pow(s,e,n)
+    c_0 = blind
+    B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
     a = 2*B
     b = (3*B) - 1
     M = set()
@@ -70,7 +71,7 @@ def attack(c:int, n:int, e:int)->int():
         M = new_M
         #Step 4: Compute the solution
         #CHECK careful here with iter?
-        if len(M)==1 and next(iter(M)).lower == next(iter(M)).upper: 
+        if len(M)==1 and (next(iter(M)).lower == next(iter(M)).upper): 
             m = number.inverse(s*next(iter(M)).lower)
             return m
         i += 1
