@@ -22,11 +22,17 @@ import portion as P
 def attack(c:int, n:int, e:int,d:int)->int:
     #Implement Step 1 skip check
     #Step 1: Blinding, find the first PKCS conforming message
+    print("let the attack commence")
     s = generate_s()
+    num_checks = 0
     blind = conversions.int_to_bytes(c*pow(s,e) % n)
     while(not padding_oracle(RSA_encrypt(blind, n, e),d, n)):
+        num_checks+=1
+        if num_checks % 1000==0:
+            print(num_checks)
         s = generate_s()
         blind = conversions.int_to_bytes(c*pow(s,e) % n)
+    print("blind found")
     c_0 = blind
     #watch out for int to bytes
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
@@ -41,12 +47,15 @@ def attack(c:int, n:int, e:int,d:int)->int:
         #ciphertext c_i PKCS conforming
         if(i == 1):
             s_i = find_c_i(c, e, n, ((n // 3*B) + (n % 3*B)), n-1)
+            print("step2a")
         #Step 2(b): If M has multiple intervals and i > 1, 
         #find smallest s_i PKCS conforming
         elif(len(M) >= 2):
             s_i = find_c_i(c, e, n, s_i + 1, n - 1) 
+            print("step2b")
         #Step 2(c): Searching with one interval left
         else:
+            print("step2c")
             s_i = 0
             interval = next(iter(M))
             a = interval.lower
@@ -58,6 +67,7 @@ def attack(c:int, n:int, e:int,d:int)->int:
                 s_i = find_c_i(c, e, n, lower_bound,  upper_bound)
                 r_i += 1
         #Step 3: Narrow solution set
+        print("step3")
         new_M = set()
         for interval in M:
             a = interval.lower
