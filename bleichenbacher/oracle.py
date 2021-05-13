@@ -49,6 +49,3 @@ tests = [
 outputs = [
     False, True, False, False, True
 ]
-
-for i in range(len(tests)):
-    print(padding_oracle(tests[i])==outputs[i])
