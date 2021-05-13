@@ -11,3 +11,4 @@ outputs = [
 for i in range(len(test)):
     if padding_oracle(tests[i])!=outputs[i]:
         print(tests[i])
+        

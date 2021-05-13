@@ -76,7 +76,7 @@ def b64_to_hex(b64rep):
     return bytes_to_hex(b64_to_bytes(b64rep))
 
 def int_to_bytes(intrep):
-    return intrep.to_bytes((intrep.bit_length() + 7) // 8, 'big')
+    return intrep.to_bytes((intrep.bit_length() + 7) // 8 + 1, 'big')
 
 def bytes_to_int(bytesrep):
     return int.from_bytes(bytesrep, 'big')
