@@ -40,10 +40,10 @@ def attack(c:int, n:int, e:int,d:int)->int:
     print("blind found in", num_checks)
     c_0 = blind
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
+    print(B)
     a = 2*B
     b = (3*B) - 1
     M = set()
-    #M.add(P.closed(a, b))
     M.add((a,b))
     print(len(M))
     i = 1
@@ -64,17 +64,18 @@ def attack(c:int, n:int, e:int,d:int)->int:
         #Step 2(c): Searching with one interval left
         else:
             print("step2c")
-            s_i = 0
             m_copy = M.copy()
             interval = m_copy.pop()
             a = interval[0]
             b = interval[1]
             r_i = (2*b*s_i - 2*B) // n
-            while(s_i == 0):
+            flag == True
+            while(flag):
                 lower_bound = (2 * B + r_i * n) // b 
-                upper_bound = (3 * B + r_i * n) // a 
+                upper_bound = (3 * B + r_i * n) // a
                 s_i = find_c_i(c, e, n, lower_bound,  upper_bound)
                 r_i += 1
+                flag = not padding_oracle(conversions.int_to_bytes(c_0*pow(s_i,e)), d, n)
         #Step 3: Narrow solution set
         print("step3")
         new_M = set()
@@ -86,6 +87,10 @@ def attack(c:int, n:int, e:int,d:int)->int:
             for r in range(lower_r, upper_r):
                 maxer = ceil((2*B + r*n)/s_i)
                 minner = (3*B-1+r*n)//s_i
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                print("minner:",minner,"\n b:",b)
+                print("s_i",s_i)
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 new_M.add((max(a,maxer),min(b,minner)))
         M = new_M.copy()
         print("step 3 over")
@@ -104,11 +109,11 @@ def find_c_i(c, e, n, lower_bound, upper_bound):
     s_i = lower_bound
     c_i = (c * pow(s_i, e)) % n
     #Iterates s_i and checks to see if c_i is PKCS conforming
-    while(not padding_oracle(conversions.int_to_bytes(c_i),d,n)): #and s_i <= upper_bound
+    while(not padding_oracle(conversions.int_to_bytes(c_i),d,n) and s_i <= upper_bound): #
         s_i += 1
         c_i = (c * pow(s_i, e)) % n
-    #if (s_i > upper_bound):
-    #    return 0
+    if (s_i > upper_bound):
+        return 0
     else:
         return s_i
     
