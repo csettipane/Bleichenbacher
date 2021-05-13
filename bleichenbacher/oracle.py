@@ -8,9 +8,9 @@ This means that the first two bytes must be 00 and 02, followed by at least
 eight non-zero bytes, and then some byte after that must be zero
 """
 import conversions
-import helpers
+from helpers import *
 
-def padding_oracle(plaintext:bytes):
+def padding_oracle(ciphertext:bytes, d:int, n:int):
     plaintext = RSA_decrypt(ciphertext,d,n)
     #the first two bytes must be b'00' and b'02'
     if len(plaintext)<11:
