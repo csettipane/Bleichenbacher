@@ -85,7 +85,7 @@ def attack(c:int, n:int, e:int,d:int)->int:
             lower_r = (a*s_i-3*B+1)//n
             upper_r = (b*s_i-2*B)//n+1
             for r in range(lower_r, upper_r):
-                maxer = ceil((2*B + r*n)/s_i)
+                maxer = ceildiv((2*B + r*n),s_i)
                 minner = (3*B-1+r*n)//s_i
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print("minner:",minner,"\n b:",b)
@@ -131,5 +131,4 @@ m = b'I luv you'
 key = RSA.construct((n,e,d,p,q))
 cipher = PKCS1_v1_5.new(key)
 c = conversions.bytes_to_int(cipher.encrypt(m))
-
 print(attack(c,n,e,d))

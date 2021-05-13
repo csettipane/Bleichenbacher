@@ -19,3 +19,6 @@ def RSA_decrypt(ciphertext:bytes,d:int,n:int)->bytes:
 
 def generate_s()->int:
     return randint(0, 2^256)
+
+def ceildiv(a, b):
+    return -(-a // b)
