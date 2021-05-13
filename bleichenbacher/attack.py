@@ -17,7 +17,7 @@ import oracle
 from math import ceil
 import portion as P
 
-def attack(ciphertext, n, e):
+def attack(c:int, n:int, e:int)->int():
     #Implement Step 1 skip check
     #Step 1: Blinding, find the first PKCS conforming message
     s = generate_s()
