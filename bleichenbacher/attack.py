@@ -25,7 +25,7 @@ def attack(c:int, n:int, e:int)->int():
     while(not padding_oracle(RSA_encrypt(blind, n, e))):
         blind = conversions.int_to_bytes(randint(0,2^16))
     c_0 = RSA_encrypt(blind, n, e)
-    B = pow(2, 8*(len(ciphertext-2)))
+    B = pow(2, 8*(len(string(c))-2))
     a = 2*B
     b = (3*B) - 1
     M = set()
