@@ -38,7 +38,7 @@ def attack(c:int, n:int, e:int,d:int)->int:
             blinds.add(blind)
             flag = not padding_oracle(blind,d,n)
     print("blind found in", num_checks)
-    c_0 = blind
+    c_0 = conversions.bytes_to_int(blind)
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
     print(B)
     a = 2*B
@@ -54,12 +54,12 @@ def attack(c:int, n:int, e:int,d:int)->int:
         #ciphertext c_i PKCS conforming
         if(i == 1):
             print("start step2a")
-            s_i = find_c_i(c, e, n, n // (3*B), n-1)
+            s_i = find_c_i(c_0, e, n, n // (3*B), n-1)
             print("step2a")
         #Step 2(b): If M has multiple intervals and i > 1, 
         #find smallest s_i PKCS conforming
         elif(len(M) >= 2):
-            s_i = find_c_i(c, e, n, s_i + 1, n - 1) 
+            s_i = find_c_i(c_0, e, n, s_i + 1, n - 1) 
             print("step2b")
         #Step 2(c): Searching with one interval left
         else:
@@ -68,12 +68,12 @@ def attack(c:int, n:int, e:int,d:int)->int:
             interval = m_copy.pop()
             a = interval[0]
             b = interval[1]
-            r_i = (2*b*s_i - 2*B) // n
+            r_i = ceildiv((2*(b*s_i - 2*B)), n)
             flag == True
             while(flag):
-                lower_bound = (2 * B + r_i * n) // b 
+                lower_bound = ceildiv((2 * B + r_i * n), b) 
                 upper_bound = (3 * B + r_i * n) // a
-                s_i = find_c_i(c, e, n, lower_bound,  upper_bound)
+                s_i = find_c_i(c_0, e, n, lower_bound,  upper_bound)
                 r_i += 1
                 flag = not padding_oracle(conversions.int_to_bytes(c_0*pow(s_i,e)), d, n)
         #Step 3: Narrow solution set
@@ -82,9 +82,9 @@ def attack(c:int, n:int, e:int,d:int)->int:
         for interval in M:
             a = interval[0]
             b = interval[1]
-            lower_r = (a*s_i-3*B+1)//n
-            upper_r = (b*s_i-2*B)//n+1
-            for r in range(lower_r, upper_r):
+            lower_r = ceildiv((a*s_i-3*B+1),n)
+            upper_r = (b*s_i-2*B)//n
+            for r in range(lower_r, upper_r+1):
                 maxer = ceildiv((2*B + r*n),s_i)
                 minner = (3*B-1+r*n)//s_i
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
