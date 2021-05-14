@@ -41,7 +41,7 @@ def attack(c:int, n:int, e:int,d:int)->int:
                 blinds.add(blind)
                 flag = not padding_oracle(blind,d,n)
         c_0 = conversions.bytes_to_int(blind)
-    B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
+    B = pow(2, 8*(len(conversions.int_to_bytes(n)[1:])-2))
     a = 2*B
     b = (3*B) - 1
     M = P.closed(a, b)

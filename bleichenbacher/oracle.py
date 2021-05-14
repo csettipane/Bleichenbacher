@@ -11,6 +11,7 @@ import conversions
 from helpers import *
 
 def padding_oracle(ciphertext:bytes, d:int, n:int):
+    #use hex b/c bytes are wonky sometimes
     plaintext = conversions.bytes_to_hex(RSA_decrypt(ciphertext,d,n))
     #the first two bytes must be b'00' and b'02'
     if len(plaintext)<19:
