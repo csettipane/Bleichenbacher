@@ -22,3 +22,4 @@ def generate_s()->int:
 
 def ceildiv(a, b):
     return -(-a // b)
+

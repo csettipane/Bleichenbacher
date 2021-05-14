@@ -24,6 +24,8 @@ def padding_oracle(ciphertext:bytes, d:int, n:int):
     #if no bytes are b'00' then not PKCS conforming
     return False
 
+#Did not have time to finish using oracle class (would have been nice
+#to "hide" the secret key!)
 class oracle:
     def __init__(self, d, n):
         self.d = d
