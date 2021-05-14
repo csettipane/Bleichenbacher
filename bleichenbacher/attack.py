@@ -37,15 +37,12 @@ def attack(c:int, n:int, e:int,d:int)->int:
         if blind not in blinds:
             blinds.add(blind)
             flag = not padding_oracle(blind,d,n)
-    print("blind found in", num_checks)
     c_0 = conversions.bytes_to_int(blind)
     B = pow(2, 8*(len(conversions.int_to_bytes(n))-2))
-    print(B)
     a = 2*B
     b = (3*B) - 1
     M = set()
     M.add((a,b))
-    print(len(M))
     i = 1
     #Step 2: Search for more PKCS conforming messages 
     #while(i==1 or len(M)>1):
